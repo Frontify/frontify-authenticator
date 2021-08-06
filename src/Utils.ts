@@ -1,5 +1,3 @@
-const fetch = require('node-fetch');
-
 export function getRandomString(length: number): string {
     const validChars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     let array = new Uint8Array(length);
