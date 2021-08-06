@@ -11,7 +11,7 @@ export type AuthenticationConfig = {
 }
 
 export type AuthorizationUrl = {
-    authorizeUrl: string,
+    authorizationUrl: string,
     codeVerifier: string,
     sessionId: string
 }
@@ -48,7 +48,7 @@ export async function computeAuthorizationUrl(config: AuthenticationConfig): Pro
     }
 
     return {
-        authorizeUrl: `https://${normalizeDomain(config.domain)}/api/oauth/authorize?${toUrlParameter(urlParameters)}`,
+        authorizationUrl: `https://${normalizeDomain(config.domain)}/api/oauth/authorize?${toUrlParameter(urlParameters)}`,
         codeVerifier,
         sessionId
     }
