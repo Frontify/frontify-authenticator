@@ -39,3 +39,10 @@ export async function httpCall<T>(url: string, init?: RequestInit): Promise<T> {
     }
     throw new Error(response.statusText)
 }
+
+export function addWindowEventListener(eventType: string, callback: any): Function {
+    window.addEventListener(eventType, callback);
+    return () => {
+        window.removeEventListener(eventType, callback);
+    }
+}
