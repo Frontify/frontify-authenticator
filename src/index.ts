@@ -143,22 +143,21 @@ function openDomainPopUp(configuration: AuthConfigurationInput, popUp: Popup): P
             5 * 60 * 1000,
         );
 
-        popUp.onDomain(() => {
+        popUp.onDomain(async () => {
             clearTimeout(domainPopUpTimeout);
             configuration.domain = popup.getDomain();
-            authenticate(configuration as AuthConfiguration, popup)
-                .then((result) => {
-                    if (result) {
-                        resolve(result);
-                    }
-                })
-                .catch((error) => {
-                    if (error instanceof AuthenticatorError && error.code !== 'ERR_AUTH_SESSION') {
-                        reject();
-                    } else {
-                        delete configuration.domain;
-                    }
-                });
+            try {
+                const result = await authenticate(configuration as AuthConfiguration, popup);
+                if (result) {
+                    resolve(result);
+                }
+            } catch (error) {
+                if (error instanceof AuthenticatorError && error.code !== 'ERR_AUTH_SESSION') {
+                    reject();
+                } else {
+                    delete configuration.domain;
+                }
+            }
 
             logMessage('warning', {
                 code: 'WARN_DOMAIN_SELECT',

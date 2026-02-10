@@ -35,7 +35,7 @@ export type Token = {
 };
 
 async function computeChallengeCode(codeVerifier: string): Promise<string> {
-    const array: Uint8Array = new TextEncoder().encode(codeVerifier);
+    const array = new TextEncoder().encode(codeVerifier);
     const digest: ArrayBuffer = await window.crypto.subtle.digest(HASH_ALGORITHM, array);
     const hash: string = String.fromCharCode.apply(null, Array.from(new Uint8Array(digest)));
     return encodeUrlToBase64(hash);

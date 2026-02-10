@@ -42,7 +42,7 @@
     "devDependencies": {
         "@frontify/eslint-config-typescript": "^0.16.2",
         "@rollup/plugin-node-resolve": "^16.0.3",
-        "@types/node": "^16.7.13",
+        "@types/node": "^25.2.2",
         "esbuild": "^0.27.3",
         "eslint": "^8.0.0",
         "prettier": "^3.8.1",

@@ -6,6 +6,7 @@ export class AuthenticatorError extends Error {
         message: string,
     ) {
         super(`${code}: ${message}`);
+        this.name = 'AuthenticatorError';
         logMessage('error', {
             code,
             message,

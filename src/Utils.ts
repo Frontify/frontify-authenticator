@@ -27,23 +27,20 @@ export function normalizeDomain(domain: string): string {
 }
 
 export async function httpCall<JsonResponse>(url: string, init?: RequestInit): Promise<JsonResponse> {
-    return fetch(url, init)
-        .then(async (response) => {
-            if (response.status >= 200 && response.status <= 299) {
-                return (await response.json()) as JsonResponse;
-            }
-            throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', response.statusText);
-        })
-        .then((response: JsonResponse): JsonResponse => {
-            return response;
-        })
-        .catch((error: AuthenticatorError | string) => {
-            if (error instanceof AuthenticatorError) {
-                throw error;
-            }
+    try {
+        const response = await fetch(url, init);
+        if (response.status >= 200 && response.status <= 299) {
+            return (await response.json()) as JsonResponse;
+        }
 
-            throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', error);
-        });
+        throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', response.statusText);
+    } catch (error: unknown) {
+        if (error instanceof AuthenticatorError) {
+            throw error;
+        }
+
+        throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', error as string);
+    }
 }
 
 export function addWindowEventListener(eventType: string, listener: EventListenerOrEventListenerObject): () => void {
