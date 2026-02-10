@@ -130,14 +130,17 @@ function openDomainPopUp(configuration: AuthConfigurationInput, popUp: Popup): P
     });
 
     return new Promise((resolve, reject) => {
-        domainPopUpTimeout = setTimeout(() => {
-            POPUP_STATE.open = false;
-            popUp.close();
-            logMessage('warning', {
-                code: 'WARN_DOMAIN_TIMEOUT',
-                message: 'Domain popup timed out.',
-            });
-        }, 5 * 60 * 1000);
+        domainPopUpTimeout = setTimeout(
+            () => {
+                POPUP_STATE.open = false;
+                popUp.close();
+                logMessage('warning', {
+                    code: 'WARN_DOMAIN_TIMEOUT',
+                    message: 'Domain popup timed out.',
+                });
+            },
+            5 * 60 * 1000,
+        );
 
         popUp.onDomain(() => {
             clearTimeout(domainPopUpTimeout);
@@ -180,14 +183,17 @@ function openAuthPopUp(url: string, popUp: Popup): Promise<void> {
     });
 
     return new Promise((resolve, reject) => {
-        authTimeout = setTimeout(() => {
-            POPUP_STATE.open = false;
-            popUp.close();
-            logMessage('warning', {
-                code: 'WARN_AUTH_TIMEOUT',
-                message: 'Auth popup timed out.',
-            });
-        }, 5 * 60 * 1000);
+        authTimeout = setTimeout(
+            () => {
+                POPUP_STATE.open = false;
+                popUp.close();
+                logMessage('warning', {
+                    code: 'WARN_AUTH_TIMEOUT',
+                    message: 'Auth popup timed out.',
+                });
+            },
+            5 * 60 * 1000,
+        );
 
         popUp.onAborted(() => {
             POPUP_STATE.open = false;
