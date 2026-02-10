@@ -115,6 +115,10 @@ async function authenticate(configuration: AuthConfiguration, popUp: Popup): Pro
             throw new AuthenticatorError('ERR_AUTH_SESSION', 'Failed generating session.');
         }
 
+        if (error instanceof AuthenticatorError) {
+            throw error;
+        }
+
         POPUP_STATE.open = false;
         throw new AuthenticatorError('ERR_AUTH', 'Failed retrieving access token.');
     }
