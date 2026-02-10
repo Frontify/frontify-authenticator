@@ -9,7 +9,7 @@ export function getRandomString(length: number): string {
 }
 
 export function encodeUrlToBase64(url: string): string {
-    return btoa(url).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return btoa(url).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
 }
 
 export function toUrlParameter(dict: { [name: string]: string }): string {
@@ -22,7 +22,7 @@ export function toUrlParameter(dict: { [name: string]: string }): string {
 }
 
 export function normalizeDomain(domain: string): string {
-    const normalizedDomain = domain.replace(/^(http(?:s)?:\/\/)/, '');
+    const normalizedDomain = domain.replace(/^(https?:\/\/)/, '');
     return normalizedDomain.endsWith('/') ? normalizedDomain.replace(/\/+$/, '') : normalizedDomain;
 }
 

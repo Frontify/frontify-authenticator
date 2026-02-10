@@ -7,8 +7,8 @@ export class AuthenticatorError extends Error {
     ) {
         super(`${code}: ${message}`);
         logMessage('error', {
-            code: code,
-            message: message,
+            code,
+            message,
         });
     }
 }

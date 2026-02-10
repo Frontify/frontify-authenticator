@@ -1,4 +1,4 @@
-import { encodeUrlToBase64, getRandomString, toUrlParameter, httpCall, normalizeDomain } from './Utils';
+import { encodeUrlToBase64, getRandomString, httpCall, normalizeDomain, toUrlParameter } from './Utils';
 import { AuthenticatorError } from './Exception';
 
 const CODE_VERIFIER_LENGTH = 64;

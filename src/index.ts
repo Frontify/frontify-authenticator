@@ -5,9 +5,9 @@ import {
     AuthConfiguration,
     Token,
     computeAuthorizationUrl,
-    pollOauthSession,
     getAccessToken,
     getRefreshToken,
+    pollOauthSession,
     revokeToken,
 } from './Oauth';
 
@@ -109,7 +109,8 @@ async function authenticate(configuration: AuthConfiguration, popUp: Popup): Pro
             return getAccessToken(configuration, authorizationCode, computedAuthorization.codeVerifier);
         });
     } catch (error) {
-        const errorMessage = `Error generating session. Make sure that the inserted domain is a valid and secure Frontify instance.`;
+        const errorMessage =
+            'Error generating session. Make sure that the inserted domain is a valid and secure Frontify instance.';
         popUp.popUp?.postMessage({ domainError: errorMessage }, '*');
 
         if (error instanceof AuthenticatorError && error.code === 'ERR_AUTH_COMPUTE_URL') {
