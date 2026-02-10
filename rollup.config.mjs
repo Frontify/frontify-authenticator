@@ -1,9 +1,8 @@
 import dts from 'rollup-plugin-dts';
 import esbuild from 'rollup-plugin-esbuild';
 import nodeResolve from '@rollup/plugin-node-resolve';
-import pckg from './package.json';
 
-const name = pckg.main.replace('.umd.js', '');
+const name = './dist/index';
 
 const bundle = (config) => ({
     ...config,
@@ -15,7 +14,7 @@ export default [
         plugins: [
             nodeResolve(),
             esbuild({
-                minify: process.env.NODE_ENV === 'production',
+                minify: true,
             }),
         ],
         output: [

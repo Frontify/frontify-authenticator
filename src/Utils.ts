@@ -9,7 +9,7 @@ export function getRandomString(length: number): string {
 }
 
 export function encodeUrlToBase64(url: string): string {
-    return btoa(url).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+    return btoa(url).replaceAll('+', '-').replaceAll('/', '_').replace(/=+$/, '');
 }
 
 export function toUrlParameter(dict: { [name: string]: string }): string {
@@ -22,28 +22,25 @@ export function toUrlParameter(dict: { [name: string]: string }): string {
 }
 
 export function normalizeDomain(domain: string): string {
-    const normalizedDomain = domain.replace(/^(http(?:s)?:\/\/)/, '');
+    const normalizedDomain = domain.replace(/^(https?:\/\/)/, '');
     return normalizedDomain.endsWith('/') ? normalizedDomain.replace(/\/+$/, '') : normalizedDomain;
 }
 
 export async function httpCall<JsonResponse>(url: string, init?: RequestInit): Promise<JsonResponse> {
-    return fetch(url, init)
-        .then(async (response) => {
-            if (response.status >= 200 && response.status <= 299) {
-                return (await response.json()) as JsonResponse;
-            }
-            throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', response.statusText);
-        })
-        .then((response: JsonResponse): JsonResponse => {
-            return response;
-        })
-        .catch((error: AuthenticatorError | string) => {
-            if (error instanceof AuthenticatorError) {
-                throw error;
-            }
+    try {
+        const response = await fetch(url, init);
+        if (response.status >= 200 && response.status <= 299) {
+            return (await response.json()) as JsonResponse;
+        }
 
-            throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', error);
-        });
+        throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', response.statusText);
+    } catch (error: unknown) {
+        if (error instanceof AuthenticatorError) {
+            throw error;
+        }
+
+        throw new AuthenticatorError('ERR_AUTH_HTTP_REQUEST', error as string);
+    }
 }
 
 export function addWindowEventListener(eventType: string, listener: EventListenerOrEventListenerObject): () => void {
