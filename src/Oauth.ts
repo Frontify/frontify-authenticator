@@ -1,5 +1,5 @@
-import { encodeUrlToBase64, getRandomString, httpCall, normalizeDomain, toUrlParameter } from './Utils';
 import { AuthenticatorError } from './Exception';
+import { encodeUrlToBase64, getRandomString, httpCall, normalizeDomain, toUrlParameter } from './Utils';
 
 const CODE_VERIFIER_LENGTH = 64;
 const AUTH_URL_RESPONSE_TYPE = 'code';

@@ -19,6 +19,12 @@ type Configuration = {
     left: number;
 };
 
+type PopupMessageData = {
+    domain?: string;
+    aborted?: boolean;
+    domainError?: string;
+};
+
 const DEFAULT_POPUP_CONFIG = {
     title: POPUP_DEFAULT_TITLE,
     width: 800,
@@ -53,23 +59,26 @@ export class Popup {
         }, 100);
     }
 
-    private attachEventListeners: CallableFunction = () => {
-        return (event: MessageEvent): void => {
-            switch (event.data) {
+    private attachEventListeners = () => {
+        return (event: Event): void => {
+            const { data } = event as MessageEvent<string | PopupMessageData>;
+            switch (data) {
                 case Popup.EVENT_NAME_CANCELLED:
                     this.call(Popup.EVENT_METHOD_CANCELLED);
                     break;
                 case Popup.EVENT_NAME_SUCCESS:
                     this.call(Popup.EVENT_METHOD_SUCCESS);
                     break;
-                default:
-                    if (event.data.domain) {
-                        this.setDomain(event.data.domain);
+                default: {
+                    const messageData = data as PopupMessageData;
+                    if (messageData.domain) {
+                        this.setDomain(messageData.domain);
                         this.call(Popup.EVENT_METHOD_DOMAIN);
-                    } else if (event.data.aborted) {
+                    } else if (messageData.aborted) {
                         this.call(Popup.EVENT_METHOD_ABORTED);
                     }
                     break;
+                }
             }
         };
     };

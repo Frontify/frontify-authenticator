@@ -40,11 +40,11 @@
     },
     "homepage": "https://developer.frontify.com/",
     "devDependencies": {
-        "@frontify/eslint-config-typescript": "^0.16.2",
+        "@frontify/eslint-config-basic": "^1.0.11",
         "@rollup/plugin-node-resolve": "^16.0.3",
         "@types/node": "^25.2.2",
         "esbuild": "^0.27.3",
-        "eslint": "^8.0.0",
+        "eslint": "^9.39.2",
         "prettier": "^3.8.1",
         "rollup": "^4.57.1",
         "rollup-plugin-dts": "^6.3.0",

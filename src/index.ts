@@ -1,15 +1,15 @@
 import { AuthenticatorError } from './Exception';
 import { logMessage } from './Logger';
-import { Popup, PopupConfiguration } from './Popup';
 import {
-    AuthConfiguration,
-    Token,
+    type AuthConfiguration,
+    type Token,
     computeAuthorizationUrl,
     getAccessToken,
     getRefreshToken,
     pollOauthSession,
     revokeToken,
 } from './Oauth';
+import { Popup, type PopupConfiguration } from './Popup';
 
 export type { Token, PopupConfiguration };
 
@@ -55,13 +55,12 @@ export async function authorize(
             .then((result: Token): Token | void => {
                 POPUP_STATE.open = false;
                 token = result;
+                return;
             })
-            .catch((error) => {
-                if (error === false) {
-                    throw new AuthenticatorError('ERR_AUTH_DOMAIN_POPUP_CLOSED', 'Domain cancelled by client.');
-                }
-
-                throw new AuthenticatorError('ERR_AUTH_FAILED', 'Auth failed.');
+            .catch((error: unknown) => {
+                throw error instanceof AuthenticatorError
+                    ? error
+                    : new AuthenticatorError('ERR_AUTH_FAILED', 'Auth failed.');
             });
     } else {
         await authenticate(configuration as AuthConfiguration, popup)
@@ -70,13 +69,12 @@ export async function authorize(
                 if (result) {
                     token = result;
                 }
+                return;
             })
-            .catch((error) => {
-                if (error === false) {
-                    throw new AuthenticatorError('ERR_AUTH_POPUP_CLOSED', 'Auth aborted by client.');
-                }
-
-                throw new AuthenticatorError('ERR_AUTH_FAILED', 'Auth failed.');
+            .catch((error: unknown) => {
+                throw error instanceof AuthenticatorError
+                    ? error
+                    : new AuthenticatorError('ERR_AUTH_FAILED', 'Auth failed.');
             });
     }
 
@@ -117,6 +115,10 @@ async function authenticate(configuration: AuthConfiguration, popUp: Popup): Pro
             throw new AuthenticatorError('ERR_AUTH_SESSION', 'Failed generating session.');
         }
 
+        if (error instanceof AuthenticatorError) {
+            throw error;
+        }
+
         POPUP_STATE.open = false;
         throw new AuthenticatorError('ERR_AUTH', 'Failed retrieving access token.');
     }
@@ -143,21 +145,23 @@ function openDomainPopUp(configuration: AuthConfigurationInput, popUp: Popup): P
             5 * 60 * 1000,
         );
 
-        popUp.onDomain(async () => {
+        popUp.onDomain(() => {
             clearTimeout(domainPopUpTimeout);
             configuration.domain = popup.getDomain();
-            try {
-                const result = await authenticate(configuration as AuthConfiguration, popup);
-                if (result) {
-                    resolve(result);
-                }
-            } catch (error) {
-                if (error instanceof AuthenticatorError && error.code !== 'ERR_AUTH_SESSION') {
-                    reject();
-                } else {
-                    delete configuration.domain;
-                }
-            }
+            authenticate(configuration as AuthConfiguration, popup)
+                .then((result) => {
+                    if (result) {
+                        resolve(result);
+                    }
+                    return;
+                })
+                .catch((error) => {
+                    if (error instanceof AuthenticatorError && error.code !== 'ERR_AUTH_SESSION') {
+                        reject(new AuthenticatorError('ERR_AUTH_FAILED', 'Auth failed.'));
+                    } else {
+                        delete configuration.domain;
+                    }
+                });
 
             logMessage('warning', {
                 code: 'WARN_DOMAIN_SELECT',
@@ -169,7 +173,7 @@ function openDomainPopUp(configuration: AuthConfigurationInput, popUp: Popup): P
             POPUP_STATE.open = false;
             clearTimeout(domainPopUpTimeout);
             popUp.close();
-            reject(false);
+            reject(new AuthenticatorError('ERR_AUTH_DOMAIN_POPUP_CLOSED', 'Domain cancelled by client.'));
         });
     });
 }
@@ -199,7 +203,7 @@ function openAuthPopUp(url: string, popUp: Popup): Promise<void> {
             POPUP_STATE.open = false;
             clearTimeout(authTimeout);
             popUp.close();
-            reject(false);
+            reject(new AuthenticatorError('ERR_AUTH_POPUP_CLOSED', 'Auth aborted by client.'));
         });
 
         popUp.onSuccess(() => {
@@ -217,7 +221,7 @@ function openAuthPopUp(url: string, popUp: Popup): Promise<void> {
             POPUP_STATE.open = false;
             clearTimeout(authTimeout);
             popUp.close();
-            reject(false);
+            reject(new AuthenticatorError('ERR_AUTH_POPUP_CLOSED', 'Auth cancelled by client.'));
         });
     });
 }
