@@ -35,7 +35,7 @@ const DEFAULT_POPUP_CONFIG = {
 
 export class Popup {
     public readonly popUp: Window | null;
-    private readonly interval: NodeJS.Timeout;
+    private readonly interval: number;
     private readonly unregisterEventListener: () => void;
     private static EVENT_NAME_CANCELLED = 'frontify-oauth-authorize-cancelled';
     private static EVENT_NAME_SUCCESS = 'frontify-oauth-authorize-success';

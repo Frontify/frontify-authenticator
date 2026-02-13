@@ -27,8 +27,8 @@ const POPUP_STATE = {
 
 let popup: Popup;
 let token: Token;
-let domainPopUpTimeout: NodeJS.Timeout;
-let authTimeout: NodeJS.Timeout;
+let domainPopUpTimeout: number;
+let authTimeout: number;
 
 export async function authorize(
     configuration: AuthConfigurationInput,
