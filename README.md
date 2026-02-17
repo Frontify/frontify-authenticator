@@ -10,14 +10,14 @@ There are three possible ways of installing or requiring the Frontify Authentica
 
 Installing the latest published package on a third party app is as simple as running `npm i @frontify/frontify-authenticator` and requiring the main class either via CommonJs or as an ES module.
 
-```
+```js
 // CommonJs require
 const FrontifyAuthenticator = require('@frontify/frontify-authenticator');
 ```
 
 OR
 
-```
+```js
 // ESM import
 import { authorize, refresh, revoke } from '@frontify/frontify-authenticator';
 ```
@@ -26,7 +26,7 @@ import { authorize, refresh, revoke } from '@frontify/frontify-authenticator';
 
 Alternatively, in case you're not relying on npm packages in your web app, you can also require the minified JS script directly by using a CDN such as UPAKG. You can find the latest [Frontify Authenticator v2 source code](https://unpkg.com/@frontify/frontify-authenticator@latest/dist/index.js) and import it to your project you by requiring it via a `<script>` HTML element.
 
-```
+```html
 <script src="https://unpkg.com/@frontify/frontify-authenticator@latest/dist/index.js"></script>
 ```
 
@@ -36,13 +36,13 @@ To make use of the available methods in the script all you have to do is use the
 
 Example:
 
-```
+```js
 FrontifyAuthenticator.authorize(...);
 ```
 
 or
 
-```
+```js
 window.FrontifyAuthenticator.authorize(...);
 ```
 
@@ -50,7 +50,7 @@ window.FrontifyAuthenticator.authorize(...);
 
 To install any package locally doesn't differ greatly from the CDN use case. You can use the [link mentioned above](https://unpkg.com/@frontify/frontify-authenticator@latest/dist/index.js) to download the file contents, save it to your local instance and require via `<script>` HTML element making the `src` address point to your local file.
 
-```
+```html
 <script src="<PATH_TO_FILE>/<FILENAME>.js"></script>
 ```
 
