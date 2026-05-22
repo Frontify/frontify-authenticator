@@ -48,7 +48,7 @@ export async function computeAuthorizationUrl(config: AuthConfiguration): Promis
         const sessionId: string | void = (await initializeOauthSession(config.domain)) || '';
 
         return {
-            authorizationUrl: `https://${normalizeDomain(config.domain)}/api/oauth/authorize?${toUrlParameter({
+            authorizationUrl: `https://${normalizeDomain(config.domain)}/oauth-authorize?${toUrlParameter({
                 response_type: AUTH_URL_RESPONSE_TYPE,
                 client_id: config.clientId,
                 scope: config.scopes.join('+'),
