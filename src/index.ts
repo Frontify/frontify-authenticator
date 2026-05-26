@@ -187,6 +187,8 @@ function openAuthPopUp(url: string, popUp: Popup): Promise<void> {
     });
 
     return new Promise((resolve, reject) => {
+        // Must exceed the server-side OAuth session TTL (OauthSessionService::EXPIRES_IN_SECONDS, 10 min)
+        // so the popup is still open when the server renders is_expired=true and fires frontify-oauth-expired.
         authTimeout = setTimeout(
             () => {
                 POPUP_STATE.open = false;
@@ -196,7 +198,7 @@ function openAuthPopUp(url: string, popUp: Popup): Promise<void> {
                     message: 'Auth popup timed out.',
                 });
             },
-            5 * 60 * 1000,
+            15 * 60 * 1000,
         );
 
         popUp.onAborted(() => {
@@ -222,6 +224,16 @@ function openAuthPopUp(url: string, popUp: Popup): Promise<void> {
             clearTimeout(authTimeout);
             popUp.close();
             reject(new AuthenticatorError('ERR_AUTH_POPUP_CLOSED', 'Auth cancelled by client.'));
+        });
+
+        popUp.onExpired(() => {
+            POPUP_STATE.open = false;
+            clearTimeout(authTimeout);
+            logMessage('warning', {
+                code: 'WARN_AUTH_EXPIRED',
+                message: 'Auth session expired.',
+            });
+            reject(new AuthenticatorError('ERR_AUTH_EXPIRED', 'Auth session expired.'));
         });
     });
 }

@@ -39,8 +39,10 @@ export class Popup {
     private readonly unregisterEventListener: () => void;
     private static EVENT_NAME_CANCELLED = 'frontify-oauth-authorize-cancelled';
     private static EVENT_NAME_SUCCESS = 'frontify-oauth-authorize-success';
+    private static EVENT_NAME_EXPIRED = 'frontify-oauth-expired';
     private static EVENT_METHOD_CANCELLED = 'cancelled';
     private static EVENT_METHOD_SUCCESS = 'success';
+    private static EVENT_METHOD_EXPIRED = 'expired';
     private static EVENT_METHOD_DOMAIN = 'domain';
     private static EVENT_METHOD_ABORTED = 'aborted';
     public listeners: { [name: string]: () => void } = {};
@@ -68,6 +70,9 @@ export class Popup {
                     break;
                 case Popup.EVENT_NAME_SUCCESS:
                     this.call(Popup.EVENT_METHOD_SUCCESS);
+                    break;
+                case Popup.EVENT_NAME_EXPIRED:
+                    this.call(Popup.EVENT_METHOD_EXPIRED);
                     break;
                 default: {
                     const messageData = data as PopupMessageData;
@@ -131,6 +136,10 @@ export class Popup {
 
     public onCancelled(callback: () => void): void {
         this.listeners.canceled = callback;
+    }
+
+    public onExpired(callback: () => void): void {
+        this.listeners.expired = callback;
     }
 
     close(): void {
