@@ -27,8 +27,8 @@ type PopupMessageData = {
 
 const DEFAULT_POPUP_CONFIG = {
     title: POPUP_DEFAULT_TITLE,
-    width: 800,
-    height: 600,
+    width: 960,
+    height: 665,
     top: 50,
     left: 50,
 };
@@ -92,12 +92,12 @@ export class Popup {
         const popUp = window.open(
             'about:blank',
             configuration.title,
-            `width=${configuration.width}, 
-            height=${configuration.height}, 
-            left=${configuration.left}, 
-            top=${configuration.top}, 
-            toolbar=no, menubar=no, 
-            location=no, status=no, 
+            `width=${configuration.width},
+            height=${configuration.height},
+            left=${configuration.left},
+            top=${configuration.top},
+            toolbar=no, menubar=no,
+            location=no, status=no,
             directories=no, titlebar=no`,
         );
 
