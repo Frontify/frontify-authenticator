@@ -20,7 +20,6 @@ export type AuthConfigurationInput = {
 };
 
 const DOMAIN_WINDOW_DEFAULT_URL = 'https://app.frontify.com/finder';
-const POPUP_DEFAULT_TITLE = 'Authorize Frontify';
 const POPUP_STATE = {
     open: false,
 };
@@ -38,15 +37,7 @@ export async function authorize(
         popup.close();
     }
 
-    popup = createPopUp(
-        popupConfiguration ?? {
-            title: POPUP_DEFAULT_TITLE,
-            width: 800,
-            height: 600,
-            top: 50,
-            left: 50,
-        },
-    );
+    popup = createPopUp(popupConfiguration ?? {});
 
     POPUP_STATE.open = true;
 
